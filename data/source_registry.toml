@@ -165,7 +165,7 @@ manual_instructions = 'Obtain explicit dataset-license terms before download or 
 [sources.calibread_authored_r4_r6]
 title = 'CalibRead Authored R2/R4/R6 Benchmark'
 role = 'Matched precision, ambiguity, and audited domain-specialization questions'
-homepage = 'local://docs/r4_r6_annotation_protocol.md'
+homepage = 'local://DATA_SOURCES_AND_LICENSES.md'
 license = 'Project-owned; CC-BY-4.0 release proposed after contributor consent'
 license_url = 'https://creativecommons.org/licenses/by/4.0/'
 license_status = 'approved'
