@@ -174,6 +174,5 @@ docs/                    protocol, prior work, and decisions
 src/calibread/           evaluation and conformal implementation
 tests/                   dependency-free unit tests
 data/                    schemas, cards, and example records (no raw/processed dumps)
-vldb2027-vision/         paper sources and PDF
 scripts/                 cluster helpers (configs/results omitted from this artifact)
 ```
