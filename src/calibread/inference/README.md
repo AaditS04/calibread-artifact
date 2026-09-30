@@ -1,49 +1,31 @@
 # Inference
 
-Runs **pretrained** models via OpenRouter (API key) or local **Ollama** (loopback).
-Does not train models. Outputs go under `results/` (created at run time; not shipped in
-the public artifact).
+Pretrained models via **OpenRouter** or local **Ollama** (loopback-only). Outputs under
+`results/` at run time.
 
 ## CLI
 
 ```powershell
 $env:PYTHONPATH = "src"
-python -m calibread.inference.cli validate-config <config.toml>
-python -m calibread.inference.cli plan <config.toml>
-python -m calibread.inference.cli run <config.toml>
-python -m calibread.inference.cli score <config.toml>
-python -m calibread.inference.cli report <config.toml>
-python -m calibread.inference.cli fit-calibrator <config.toml>
-python -m calibread.inference.cli apply-calibrator <config.toml>
-python -m calibread.inference.cli r7-decide <config.toml>
-python -m calibread.inference.cli composition-report <config.toml>
+python -m calibread.inference.cli validate-config configs/inference/r5_ollama_smoke.toml
+python -m calibread.inference.cli plan configs/inference/r5_ollama_smoke.toml
+python -m calibread.inference.cli run configs/inference/r5_ollama_smoke.toml
 ```
 
-Same commands are available as `calibread-infer` after `pip install -e .`.
+See `python -m calibread.inference.cli --help` for score, report, calibrator fit/apply,
+R7 decisions, and composition reports.
 
-TOML configs are **not** in this repository. Author configs locally or request frozen
-configs from the paper authors. Configuration schema: `src/calibread/inference/config.py`.
+## Configs in this artifact
+
+Only **smoke** TOML under `configs/inference/` (tests and local sanity checks). Sealed paper
+runs used private cluster configs—not included here.
+
+Schema: `src/calibread/inference/config.py`.
 
 ## Providers
 
-| Provider | Use case |
-|----------|----------|
-| `openrouter` | Hosted models; set `OPENROUTER_API_KEY` |
-| `ollama` | Local inference; server must bind to loopback only (enforced in code) |
-| `mock` | Offline tests |
-
-OpenRouter and Ollama adapters record model identity, token log-probabilities where
-available, budgets, append-only checkpoints, and hash-safe resume.
-
-## Package map
-
-```text
-cli.py                 commands
-runner.py              selection, checkpoints, manifests
-calibration.py         isotonic fit/apply
-decisions.py           R7 answer / abstain policies
-composition_report.py  R5 chain diagnostics
-providers/             openrouter, ollama, mock
-```
-
-Each run directory uses `.calibread-inference.lock` for exclusive append access.
+| Provider | Notes |
+|----------|--------|
+| `openrouter` | `OPENROUTER_API_KEY` |
+| `ollama` | Local; non-loopback URLs rejected |
+| `mock` | Offline unit tests |

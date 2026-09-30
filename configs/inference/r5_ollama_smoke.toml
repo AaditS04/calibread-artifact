@@ -1,0 +1,54 @@
+[run]
+run_id = 'r5_ollama_smoke_001'
+split = 'development'
+seed = 7
+limit_per_level = 1
+output_dir = 'results/r5/r5_ollama_smoke_001'
+resume = true
+
+[provider]
+kind = 'ollama'
+base_url = 'http://127.0.0.1:11434/api'
+timeout_seconds = 300
+max_retries = 2
+concurrency = 1
+local_only = true
+keep_alive = '5m'
+
+[model]
+# CPU-oriented 4B Q4 baseline selected for the current 8 GB laptop.
+# CalibRead resolves and records this local model's immutable digest.
+requested_model = 'qwen3:4b-instruct-2507-q4_K_M'
+temperature = 0.0
+max_tokens = 64
+require_logprobs = true
+top_logprobs = 1
+decoding_seed = 7
+num_ctx = 4096
+provider_order = []
+allow_fallbacks = false
+require_parameters = true
+data_collection = 'deny'
+
+[prompt]
+template_id = 'r5-closed-book-short-v1'
+system = 'Answer using the shortest sufficient answer. Do not explain your reasoning. If you do not know, respond exactly with ABSTAIN.'
+user_template = '''Question: {question}
+Answer:'''
+
+[budget]
+# Ollama serves the already-installed model locally, so provider cost is zero.
+max_cost_usd = 0.0
+max_requests = 5
+prompt_usd_per_million = 0.0
+completion_usd_per_million = 0.0
+
+[[datasets]]
+dataset_id = 'socrates_v1'
+examples = 'data/processed/socrates_v1/examples.jsonl'
+workloads = 'data/processed/socrates_v1/workloads.jsonl'
+
+[[datasets]]
+dataset_id = 'musique'
+examples = 'data/processed/musique/examples.jsonl'
+workloads = 'data/processed/musique/workloads.jsonl'

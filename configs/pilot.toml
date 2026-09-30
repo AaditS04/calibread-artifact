@@ -1,0 +1,159 @@
+[study]
+name = "calibread_p03_all_dimensions_pilot"
+stage = "pilot"
+protocol_version = "2026-08-11"
+finalized = false
+seed = 7
+target_coverage = 0.90
+design = "controlled_one_dimension_sweeps"
+
+[scope]
+dimensions = ["R1", "R2", "R3", "R4", "R5", "R6", "R7"]
+confirmatory_interactions = ["R1xR5", "R3xR6", "R4xR7"]
+tracks = ["finite_label_certified", "open_ended_stress"]
+
+[models]
+family_slots = ["pilot_model_tbd"]
+full_suite_family_ids = ["pilot_model_tbd"]
+
+[splits]
+development_fraction = 0.20
+calibration_fraction = 0.30
+test_fraction = 0.50
+assignment_unit = "connected_components"
+stratification = "marginal_greedy"
+missing_lineage_policy = "require_value_or_explicit_exemption"
+lineage_exemption_field = "lineage_exemptions"
+allowed_lineage_exemption_reasons = [
+  "not_applicable_by_construction",
+  "not_defined_by_source_schema",
+]
+non_exemptable_disjoint_keys = ["question_hash"]
+question_hash_method = "sha256_nfkc_casefold_whitespace_v1"
+legacy_single_key_mode = false
+disjoint_keys = [
+  "entity_id",
+  "chain_id",
+  "template_id",
+  "source_fact_id",
+  "question_hash",
+]
+strata_keys = [
+  "r1_frequency_level",
+  "r2_precision_level",
+  "r3_recency_level",
+  "r4_ambiguity_level",
+  "r5_synthesis_level",
+  "r6_domain_level",
+  "r1_x_r5_cell",
+  "r3_x_r6_cell",
+]
+
+[sample_gates]
+quota_mode = "exact_targets_after_exclusions"
+target_development_per_level = 20
+target_calibration_per_level = 30
+target_test_per_level = 50
+target_development_per_interaction_cell = 20
+target_calibration_per_interaction_cell = 30
+target_test_per_interaction_cell = 50
+hard_floor_test_per_main_level = 25
+hard_floor_test_per_interaction_cell = 25
+human_audit_per_dimension = 20
+minimum_candidate_oracle_recall = 0.90
+
+[dimensions.R1]
+name = "knowledge_frequency"
+raw_fields = ["frequency_value", "frequency_source", "frequency_unit"]
+level_field = "r1_frequency_level"
+levels = ["head", "middle", "tail"]
+anchor = "middle"
+level_mapping_method = "frozen_frequency_source_cutpoints"
+level_mapping_manifest_hash = "tbd_before_main_inference"
+
+[dimensions.R2]
+name = "precision_requirement"
+raw_fields = ["answer_type", "required_granularity", "numeric_tolerance"]
+level_field = "r2_precision_level"
+levels = ["coarse", "medium", "fine"]
+anchor = "medium"
+level_mapping_method = "typed_answer_precision_rubric"
+level_mapping_manifest_hash = "tbd_before_main_inference"
+
+[dimensions.R3]
+name = "knowledge_recency"
+raw_fields = ["event_date", "model_cutoff_date", "months_from_cutoff"]
+level_field = "r3_recency_level"
+levels = ["pre_cutoff", "post_0_3_months", "post_4_12_months", "post_13_plus_months"]
+anchor = "pre_cutoff"
+
+[dimensions.R4]
+name = "query_ambiguity"
+raw_fields = ["interpretation_count", "accepted_interpretation_ids"]
+level_field = "r4_ambiguity_level"
+levels = ["unambiguous", "two_way", "three_plus"]
+anchor = "unambiguous"
+
+[dimensions.R5]
+name = "synthesis_depth"
+raw_fields = ["hop_count", "chain_id", "constituent_example_ids"]
+level_field = "r5_synthesis_level"
+levels = ["one_hop", "two_hop", "three_hop", "four_plus_hop"]
+anchor = "one_hop"
+
+[dimensions.R6]
+name = "domain_specificity"
+raw_fields = ["domain_name", "domain_taxonomy", "specificity_score"]
+level_field = "r6_domain_level"
+levels = ["general", "specialized", "expert"]
+anchor = "general"
+level_mapping_method = "frozen_domain_taxonomy_specificity_cutpoints"
+level_mapping_manifest_hash = "tbd_before_main_inference"
+
+[dimensions.R7]
+name = "confidence_threshold"
+raw_fields = ["confidence_source", "threshold"]
+level_field = "r7_policy_level"
+levels = ["tau_0_50", "tau_0_70", "tau_0_90", "tau_0_95", "tau_0_99"]
+thresholds = [0.50, 0.70, 0.90, 0.95, 0.99]
+anchor = 0.70
+
+[policy]
+r7_thresholds = [0.50, 0.70, 0.90, 0.95, 0.99]
+r7_levels = ["tau_0_50", "tau_0_70", "tau_0_90", "tau_0_95", "tau_0_99"]
+conformal_alpha = [0.10]
+
+[evaluation]
+confidence_bins = 10
+bootstrap_replicates = 2000
+report_each_dimension = true
+report_worst_level = true
+report_interactions = true
+unseen_group_policy = "abstain"
+primary_estimand_registry = "docs/hypothesis_registry.md"
+primary_estimand_registry_authority = "authoritative_frozen_definitions"
+secondary_metrics = [
+  "accuracy",
+  "brier",
+  "log_loss",
+  "ece",
+  "ace",
+  "aurc",
+  "coverage",
+  "set_size",
+  "answer_rate",
+]
+
+[evaluation.primary_estimands]
+OP-R1 = "tail minus head risk and calibration contrast"
+OP-R2 = "fine minus coarse typed-error risk contrast"
+OP-R3 = "each post-cutoff band minus pre-cutoff risk and calibration contrast"
+OP-R4 = "ambiguity-level risk, set-size, and consistency contrasts"
+OP-R5 = "depth trend, synthesis loss, and factorized residual"
+OP-R6 = "expert minus general risk and calibration contrast"
+OP-R7 = "risk-coverage, answer-rate, set-size, abstention, and AURC frontier"
+OP-I15 = "non-additive R1 by R5 long-tail synthesis effect"
+OP-I36 = "R3 recency effect difference by R6 domain specificity"
+OP-I47 = "R4 ambiguity-dependent R7 policy-frontier difference"
+OP-CPR = "finite-label coverage gap and efficiency with open-ended oracle recall separate"
+OP-CONTRACT = "risk and action utility under answer, set, abstain, and unsupported decisions"

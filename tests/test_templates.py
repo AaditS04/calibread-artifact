@@ -1,8 +1,7 @@
-"""Structural checks for committed research artifact templates."""
+"""Structural checks for typed example records in the artifact."""
 
 from __future__ import annotations
 
-import csv
 import unittest
 from functools import partial
 from pathlib import Path
@@ -24,99 +23,6 @@ ROOT = Path(__file__).resolve().parents[1]
 MONTH_DATE_MATCH = partial(date_match, granularity="month")
 
 
-class CsvTemplateTests(unittest.TestCase):
-    def test_result_templates_have_unique_headers_and_aligned_rows(self) -> None:
-        for relative in (
-            "data/SOURCE_LICENSE_TEMPLATE.csv",
-            "results/RUN_LEDGER_TEMPLATE.csv",
-            "results/CLAIM_EVIDENCE_TEMPLATE.csv",
-            "results/MODEL_PROBE_TEMPLATE.csv",
-            "results/POWER_PRECISION_TEMPLATE.csv",
-        ):
-            with self.subTest(template=relative):
-                with (ROOT / relative).open(encoding="utf-8", newline="") as stream:
-                    rows = list(csv.reader(stream))
-                self.assertTrue(rows)
-                header = rows[0]
-                self.assertTrue(all(value.strip() for value in header))
-                self.assertEqual(len(header), len(set(header)))
-                for row_number, row in enumerate(rows[1:], start=2):
-                    self.assertEqual(
-                        len(row),
-                        len(header),
-                        f"{relative}:{row_number} does not match its header",
-                    )
-
-    def test_claim_evidence_template_has_frozen_unique_claims(self) -> None:
-        with (ROOT / "results" / "CLAIM_EVIDENCE_TEMPLATE.csv").open(
-            encoding="utf-8", newline=""
-        ) as stream:
-            rows = list(csv.DictReader(stream))
-
-        expected_claim_ids = {
-            "P03-H1",
-            "P03-H2",
-            "P03-H3",
-            "P03-H4",
-            "P03-H5",
-            "OP-R1",
-            "OP-R2",
-            "OP-R3",
-            "OP-R4",
-            "OP-R5",
-            "OP-R6",
-            "OP-R7",
-            "OP-I15",
-            "OP-I36",
-            "OP-I47",
-            "OP-CPR",
-            "OP-CONTRACT",
-        }
-        claim_ids = [row["claim_id"] for row in rows]
-        self.assertEqual(len(claim_ids), len(set(claim_ids)))
-        self.assertEqual(set(claim_ids), expected_claim_ids)
-        self.assertNotIn("P03_H1", claim_ids)
-
-        crosswalk_ids = {f"P03-H{index}" for index in range(1, 6)}
-        for row in rows:
-            with self.subTest(claim_id=row["claim_id"]):
-                expected_status = (
-                    "registered_original_crosswalk"
-                    if row["claim_id"] in crosswalk_ids
-                    else "confirmatory"
-                )
-                self.assertEqual(row["confirmatory_status"], expected_status)
-                for field in (
-                    "professor_hypothesis",
-                    "dimension_or_interaction",
-                    "contrast",
-                    "primary_metric",
-                    "model_tier",
-                    "multiplicity_family",
-                    "allowed_claim",
-                    "limitations",
-                ):
-                    self.assertTrue(row[field].strip())
-                    self.assertNotEqual(row[field], "TBD")
-                for field in (
-                    "model_id",
-                    "calibration_n",
-                    "test_n",
-                    "cluster_n",
-                    "effect_estimate",
-                    "ci_95_low",
-                    "ci_95_high",
-                    "p_value",
-                    "adjusted_p_value",
-                    "artifact_path",
-                    "figure_or_table",
-                    "reviewer",
-                ):
-                    self.assertEqual(row[field], "TBD")
-                self.assertEqual(row["assumptions_passed"], "false")
-                self.assertEqual(row["stop_rule_triggered"], "false")
-
-
 class PipelineExampleTests(unittest.TestCase):
     def test_typed_pipeline_examples_round_trip_and_link(self) -> None:
         workload = WorkloadRecord.from_dict(
@@ -128,10 +34,10 @@ class PipelineExampleTests(unittest.TestCase):
             )[0]
         )
         generation = GenerationRecord.from_dict(
-            read_jsonl(ROOT / "results" / "EXAMPLE_GENERATION_RECORD.jsonl")[0]
+            read_jsonl(ROOT / "data" / "EXAMPLE_GENERATION_RECORD.jsonl")[0]
         )
         decision = ReadResultRecord.from_dict(
-            read_jsonl(ROOT / "results" / "EXAMPLE_READ_RESULT_RECORD.jsonl")[0]
+            read_jsonl(ROOT / "data" / "EXAMPLE_READ_RESULT_RECORD.jsonl")[0]
         )
 
         self.assertEqual(workload.example_id, generation.example_id)

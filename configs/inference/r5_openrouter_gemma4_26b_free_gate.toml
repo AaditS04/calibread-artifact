@@ -1,0 +1,73 @@
+# Development-only qualification gate for OpenRouter's exact free Gemma slug.
+# This is an engineering diagnostic, not calibration or test evidence.
+
+[run]
+run_id = 'r5_openrouter_gemma4_26b_free_gate_001'
+parent_experiment_id = 'r5_openrouter_gemma4_26b_free_gate_v1'
+split = 'development'
+seed = 7
+include_levels = ['one_hop', 'two_hop', 'three_hop', 'four_plus_hop']
+limit_per_level = 2
+chain_complete = true
+# This authorizes the diagnostic gate itself. It is not approval to launch a
+# later full development/calibration/test experiment with this model.
+promotion_approved = true
+output_dir = 'results/r5/r5_openrouter_gemma4_26b_free_gate_v1/development_gate'
+resume = true
+
+[provider]
+kind = 'openrouter'
+base_url = 'https://openrouter.ai/api/v1'
+api_key_env = 'OPENROUTER_API_KEY'
+timeout_seconds = 180
+max_retries = 2
+concurrency = 1
+minimum_interval_seconds = 3.1
+http_referer = ''
+app_title = 'CalibRead R5 Free Model Gate'
+
+[model]
+requested_model = 'google/gemma-4-26b-a4b-it:free'
+temperature = 0.0
+max_tokens = 64
+require_logprobs = true
+top_logprobs = 1
+decoding_seed = 7
+reasoning_effort = 'none'
+provider_order = ['darkbloom']
+allow_fallbacks = false
+require_parameters = true
+# The pinned Darkbloom free endpoint is not on OpenRouter's ZDR list and its
+# retention/training policy is uncertain. This gate sends public benchmark
+# questions only; see OPENROUTER_FREE_GATE.md.
+data_collection = 'allow'
+
+[prompt]
+template_id = 'r5-closed-book-forced-short-v2'
+system = 'Return only the shortest sufficient factual answer. Do not explain your reasoning. Always provide your best answer even when uncertain. Never output ABSTAIN.'
+user_template = '''Question: {question}
+Answer:'''
+
+[budget]
+# The exact :free route has zero published token prices. Never insert a fake
+# positive price merely to bypass execution validation. max_requests is both
+# the plan ceiling and the per-invocation HTTP-attempt cap; retries consume it.
+max_cost_usd = 0.0
+max_requests = 40
+prompt_usd_per_million = 0.0
+completion_usd_per_million = 0.0
+
+[[datasets]]
+dataset_id = 'socrates_v1'
+examples = 'data/processed/socrates_v1/examples.jsonl'
+workloads = 'data/processed/socrates_v1/workloads.jsonl'
+
+[[datasets]]
+dataset_id = 'musique_atomic'
+examples = 'data/processed/musique_atomic/examples.jsonl'
+workloads = 'data/processed/musique_atomic/workloads.jsonl'
+
+[[datasets]]
+dataset_id = 'musique'
+examples = 'data/processed/musique_atomic/composite_examples.jsonl'
+workloads = 'data/processed/musique_atomic/composite_workloads.jsonl'

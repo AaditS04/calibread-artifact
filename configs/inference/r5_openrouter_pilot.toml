@@ -1,0 +1,53 @@
+[run]
+run_id = 'r5_openrouter_pilot_001'
+split = 'development'
+seed = 7
+limit_per_level = 100
+output_dir = 'results/r5/r5_openrouter_pilot_001'
+resume = true
+
+[provider]
+kind = 'openrouter'
+base_url = 'https://openrouter.ai/api/v1'
+api_key_env = 'OPENROUTER_API_KEY'
+timeout_seconds = 120
+max_retries = 6
+concurrency = 1
+http_referer = ''
+app_title = 'CalibRead R5'
+
+[model]
+# Replace with a concrete OpenRouter slug. Moving latest/auto aliases are rejected.
+requested_model = 'replace-with-concrete-openrouter-model'
+temperature = 0.0
+max_tokens = 64
+require_logprobs = true
+top_logprobs = 1
+provider_order = []
+allow_fallbacks = false
+require_parameters = true
+data_collection = 'deny'
+
+[prompt]
+template_id = 'r5-closed-book-short-v1'
+system = 'Answer using the shortest sufficient answer. Do not explain your reasoning. If you do not know, respond exactly with ABSTAIN.'
+user_template = '''Question: {question}
+Answer:'''
+
+[budget]
+max_cost_usd = 5.0
+max_requests = 500
+# Copy current endpoint prices here immediately before freezing the run.
+# Real OpenRouter execution fails closed while either value is zero.
+prompt_usd_per_million = 0.0
+completion_usd_per_million = 0.0
+
+[[datasets]]
+dataset_id = 'socrates_v1'
+examples = 'data/processed/socrates_v1/examples.jsonl'
+workloads = 'data/processed/socrates_v1/workloads.jsonl'
+
+[[datasets]]
+dataset_id = 'musique'
+examples = 'data/processed/musique/examples.jsonl'
+workloads = 'data/processed/musique/workloads.jsonl'

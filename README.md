@@ -1,73 +1,74 @@
-# CalibRead
+# CalibRead (artifact)
 
-CalibRead implements evaluation, conformal calibration, and Read-contract tooling for
-studying when parametric LLM **Read** operations can be trusted under declared workload
-and reliability targets.
+Python prototype for the **CalibRead Read contract** described in the PVLDB vision paper
+*CalibRead: Reliability Contracts for Parametric LLM Databases [Vision]*. The paper specifies
+SQL and planner integration as future work; this repository implements the **library** in
+Section “Prototype”: typed actions, two tracks, conformal utilities, R7 on cached scores,
+Read certificates, and closed-book inference adapters.
 
-This repository is the **public artifact** for conference submission. It contains source
-code, unit tests, data schemas, and license metadata. Experiment **configs** and **results**
-from the paper runs are not included; contact the authors for frozen run manifests.
+Sealed empirical probes in the paper (PopQA, SOCRATES, MuSiQue) are **not** shipped here—no
+run results or cluster experiment configs.
 
 ## Requirements
 
 - Python 3.11+
-- No required runtime dependencies for core library and tests (see `pyproject.toml` for optional `analysis`, `llm`, and `dev` extras)
+- Core tests and library: no required pip dependencies (`pyproject.toml` lists optional extras)
 
 ## Quick start
 
 ```powershell
 $env:PYTHONPATH = "src"
 python -m unittest discover -s tests -v
+python -m calibread.demo
 ```
 
-Install editable (optional):
+The demo uses `configs/pilot.toml` and **synthetic** data only (`research_evidence: false`).
 
-```powershell
-pip install -e ".[dev]"
-```
+## What maps to the paper
+
+| Paper claim | Code |
+|-------------|------|
+| Workload $W$ (R1–R6), evaluation track | `schema.py`, `dimensions.py`, `data/EXAMPLE_*_RECORD.jsonl` |
+| Lineage-safe splits | `splits.py`, `leakage.py` |
+| Track A: finite-label / Mondrian conformal | `conformal.py`, `read_contract.py` |
+| Track B: open-ended stress (answer/abstain) | `read_contract.py`, `inference/decisions.py` |
+| Fail-closed policy (Table fail-closed) | `read_contract.py`, `inference/decisions.py` |
+| R7 thresholds 0.50 … 0.99 on cached generations | `inference/decisions.py`, `dimensions.py` |
+| Read certificate $C$ | `certificate.py`, `data/EXAMPLE_READ_CERTIFICATE.jsonl` |
+| Composition fail-closed / union-bound diagnostics | `composition.py`, `inference/composition_report.py` |
+| Generation + isotonic calibration + manifests | `inference/runner.py`, `calibration.py`, `manifest.py` |
+| OpenRouter / Ollama adapters | `inference/providers/` |
+| Offline evaluation / risk–coverage | `evaluate.py`, `metrics.py` |
+| Data for SOCRATES, PopQA, MuSiQue (fetch only) | `data_pipeline.py`, `data/source_registry.toml` |
+
+Operational test IDs (Table OP): `docs/hypothesis_registry.md` (config validation only).
+
+Listings for SQL `CALIBREAD(...)` are **not** implemented.
 
 ## Layout
 
 ```text
-src/calibread/     core library and inference CLI
-tests/             unit tests
-data/              source registry, example records, templates
-scripts/cluster/   Slurm helpers (expects local configs)
+src/calibread/           contract, conformal, evaluation, data pipeline
+src/calibread/inference/ CLI, calibration, R7, providers
+configs/pilot.toml       dimension grid for the smoke demo
+configs/inference/       smoke TOML for provider/CLI tests only
+data/                    registry, typed examples, certificate fixture
+tests/
 ```
 
-## Evaluate cached results
-
-CSV rows must include `example_id`, `correct`, `confidence`, `condition_hash`, and
-consistent run linkage fields (`run_id`, `model_snapshot_id`, `evaluation_track`, etc.).
-See `src/calibread/evaluate.py` and `tests/test_evaluate.py`.
+## Inference
 
 ```powershell
 $env:PYTHONPATH = "src"
-python -m calibread.evaluate results.csv --group-column group --bins 10
+python -m calibread.inference.cli validate-config configs/inference/r5_ollama_smoke.toml
 ```
 
-## Inference pipeline
+See [`src/calibread/inference/README.md`](src/calibread/inference/README.md).
 
-Closed-book inference, scoring, isotonic calibration, R7 policies, and composition
-reports are under `src/calibread/inference/`. Entry point:
+## Data
 
-```powershell
-$env:PYTHONPATH = "src"
-python -m calibread.inference.cli --help
-```
-
-Provider setup and command summary: [`src/calibread/inference/README.md`](src/calibread/inference/README.md).
-
-## Data acquisition
-
-License gates and upstream sources: [`DATA_SOURCES_AND_LICENSES.md`](DATA_SOURCES_AND_LICENSES.md).
-Machine registry: `data/source_registry.toml`.
-
-```powershell
-$env:PYTHONPATH = "src"
-python -m calibread.data_pipeline list
-```
+[`DATA_SOURCES_AND_LICENSES.md`](DATA_SOURCES_AND_LICENSES.md) — licenses for datasets named in the prototype (SOCRATES, PopQA, MuSiQue).
 
 ## License
 
-See `pyproject.toml` (research use; choose a release license before publication).
+See `pyproject.toml`.

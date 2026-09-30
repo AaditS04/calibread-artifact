@@ -331,7 +331,7 @@ class ReadCertificateTests(unittest.TestCase):
             )
 
     def test_documented_jsonl_example_is_valid_and_not_evidence(self) -> None:
-        path = Path("results/EXAMPLE_READ_CERTIFICATE.jsonl")
+        path = Path("data/EXAMPLE_READ_CERTIFICATE.jsonl")
         rows = read_jsonl(path)
         self.assertEqual(len(rows), 1)
         certificate = ReadCertificate.from_dict(rows[0])

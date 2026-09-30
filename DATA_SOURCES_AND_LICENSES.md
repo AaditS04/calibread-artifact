@@ -1,48 +1,26 @@
-# Data sources and licenses
+# Data sources (vision prototype)
 
-Human-readable policy for dataset acquisition. Machine registry: `data/source_registry.toml`.
-Each source must pass its license gate before download or experimental use.
+Registry: `data/source_registry.toml`. Raw/processed files stay under `data/raw/` and
+`data/processed/` (gitignored).
 
-## Source inventory
+The vision paper’s prototype section uses **SOCRATES** (composition), **PopQA** (frequency /
+R1 probe), and **MuSiQue** (multi-hop family). Other registry entries support the follow-on
+measurement program and may be fetched the same way.
 
-| ID | Role | License / status |
+| ID | Paper role | License |
 |---|---|---|
-| `socrates_v1` | Multi-hop QA; R1 proxy | CC BY 4.0 / approved |
-| `popqa` | Popularity proxy; single-hop QA | MIT / approved |
-| `streamingqa_valid` | Time-stamped questions (R3) | CC BY 4.0 / approved |
-| `wikidata_snapshot` | Entity lineage (R2) | CC0 1.0 / approved (manual snapshot) |
-| `musique` | Multi-hop R5 validation | CC BY 4.0 / approved |
-| `malamute` | Temporal QA (R3) | MIT / approved |
-| `mmlu_cf` | Specialist validation (R6) | CDLA-Permissive-2.0 / approved (manual) |
-| `freshqa` | Dynamic R3 stress | Terms need confirmation / manual |
-| `ambigqa`, `comparisonqa` | Candidates | License unresolved / blocked |
-| `calibread_authored_r4_r6` | Project-authored R4/R6 | Release review pending |
-
-`approved` permits acquisition under recorded terms; derived artifacts may still carry
-upstream obligations. Blocked sources fail closed in the downloader.
-
-## Storage
-
-- Raw and processed datasets live under `data/raw/` and `data/processed/` (gitignored).
-- Downloads record revision, hashes, and manifests via `calibread.data_pipeline`.
-
-## Commands
+| `socrates_v1` | SOCRATES composition slice | CC BY 4.0 |
+| `popqa` | PopQA frequency split | MIT |
+| `musique` | MuSiQue multi-hop panel | CC BY 4.0 |
 
 ```powershell
 $env:PYTHONPATH='src'
 python -m calibread.data_pipeline list
-python -m calibread.data_pipeline fetch socrates_v1
-python -m calibread.data_pipeline refine socrates_v1 --limit 1000
 python -m calibread.data_pipeline prepare popqa
 python -m calibread.data_pipeline prepare musique
+python -m calibread.data_pipeline fetch socrates_v1
 ```
 
-## Upstream
-
-- SOCRATES: https://github.com/google-deepmind/latent-multi-hop-reasoning
-- PopQA: https://github.com/AlexTMallen/adaptive-retrieval
-- StreamingQA: https://github.com/google-deepmind/streamingqa
-- Wikidata: https://www.wikidata.org/wiki/Wikidata:Data_access
-- MuSiQue: https://github.com/stonybrooknlp/musique
-- MMLU-CF: https://github.com/microsoft/MMLU-CF
-- FreshQA: https://github.com/freshllms/freshqa
+Upstream: [SOCRATES](https://github.com/google-deepmind/latent-multi-hop-reasoning),
+[PopQA](https://github.com/AlexTMallen/adaptive-retrieval),
+[MuSiQue](https://github.com/stonybrooknlp/musique).
