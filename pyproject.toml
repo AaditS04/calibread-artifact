@@ -9,7 +9,10 @@ description = "Reliability evaluation and conformal baselines for parametric LLM
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "Research use; choose a release license before publication" }
-authors = [{ name = "CalibRead research team" }]
+authors = [
+  { name = "Aadit Shah", email = "f20220612@pilani.bits-pilani.ac.in" },
+  { name = "Yash Sinha", email = "yash.sinha@pilani.bits-pilani.ac.in" },
+]
 dependencies = []
 
 [project.optional-dependencies]

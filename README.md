@@ -72,3 +72,20 @@ See [`src/calibread/inference/README.md`](src/calibread/inference/README.md).
 ## License
 
 See `pyproject.toml`.
+
+## PVLDB / VLDB 2027 submission notes
+
+Official rules: [Submission Guidelines](https://vldb.org/2027/submission-guidelines.html).
+
+| Topic | Rule | This repo |
+|-------|------|-----------|
+| **Review model** | **Single-blind** — put **names and affiliations on page 1 of the PDF**; do not anonymize the paper | Paper `main.tex` includes authors; artifact may name authors in metadata |
+| **Artifact URL** | Public archival repo (e.g. GitHub); no personal homepages; link must be accessible to reviewers | `https://github.com/AaditS04/calibread-artifact` |
+| **Vision + no artifact block** | Vision papers with no experiments may omit `\vldbavailabilityurl` if you explain in CMT | Paper leaves artifact URL empty; optional supplemental link to this prototype |
+| **“Anonymity of access”** | Broken, login-walled, or suspicious URLs delay review — **not** author blind review | Repo is public; no secrets in tree |
+| **CMT** | Every author registers, declares conflicts, one account per author | Match PDF author list exactly |
+| **After acceptance** | Author list cannot change | Freeze before camera-ready |
+
+**Scan (Mar 2026):** no author emails or affiliations in tracked artifact files. Internal codenames (`P03`, `p03-*` in configs/tests) remain in code comments only — not a VLDB violation, but rename if you want a cleaner public face.
+
+**Not in this repo (keep private):** `calibread` full research tree, PC review notes, sealed `results/`, cluster configs — those can expose advisor plans or unreleased numbers unrelated to single-blind rules but risky for accidental submission links.
