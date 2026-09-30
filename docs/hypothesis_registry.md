@@ -1,15 +1,12 @@
-# Operational tests (vision paper)
+# Operational estimands
 
-Authoritative IDs for `configs/pilot.toml` validation. Definitions match Table “Falsifiable
-operational tests” in the CalibRead vision paper (contrasts, not reported results).
+Frozen operational test IDs referenced by `configs/pilot.toml`
+(`evaluation.primary_estimand_registry`). Short definitions:
 
-| ID | Expectation |
+| ID | Contrast |
 |---|---|
-| OP-R1–R6 | Tail, fine, post-cutoff, multi-interpretation, deeper hops, and expert queries degrade vs. matched anchors (risk, set size, or abstention). |
-| OP-R5 synth. | Report P(chain wrong \| every atom correct); product/union-bound are diagnostics. |
-| OP-R7 policy | Raising τ from 0.50 to 0.99 cuts answer rate; whether risk falls is measured. |
-| OP-I15 / OP-I36 / OP-I47 | R1×R5 interaction; R3×R6 specialist drop; R4-dependent R7 region. |
-| OP-CONTRACT | Workload-aware wrapper beats global calibration on worst-cell risk, at set-size or abstention cost. |
-
-These estimands belong to the follow-on **measurement** paper; the vision submission reports
-prototype machinery and sealed probes separately.
+| OP-R1–R6 | Each reliability dimension vs. a matched anchor (risk, set size, or abstention). |
+| OP-R5 synth. | P(chain wrong \| every atomic read correct); product/union bounds are diagnostics. |
+| OP-R7 policy | Effect of R7 thresholds from 0.50 through 0.99 on answer rate and risk. |
+| OP-I15 / OP-I36 / OP-I47 | Predeclared R1×R5, R3×R6, and R4×R7 interactions. |
+| OP-CONTRACT | Workload-aware calibration vs. global calibration on worst-cell risk. |

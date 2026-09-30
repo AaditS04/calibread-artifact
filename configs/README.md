@@ -1,5 +1,7 @@
-# Inference configs (smoke only)
+# Configuration files
 
-These TOML files support **unit tests** and local smoke runs. They are not the sealed
-cluster configs used for paper Table “Sealed Track B probes”. Full experiment configs and
-`results/` trees are omitted from this artifact.
+`pilot.toml` — study metadata and R1–R7 level grid used by `python -m calibread.demo`
+and config validation in the test suite.
+
+`inference/` — small smoke TOML files for provider tests and local CLI checks. They
+are not full-scale cluster run configurations.

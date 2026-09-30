@@ -15,10 +15,10 @@ python -m calibread.inference.cli run configs/inference/r5_ollama_smoke.toml
 See `python -m calibread.inference.cli --help` for score, report, calibrator fit/apply,
 R7 decisions, and composition reports.
 
-## Configs in this artifact
+## Configs
 
-Only **smoke** TOML under `configs/inference/` (tests and local sanity checks). Sealed paper
-runs used private cluster configs—not included here.
+`configs/inference/` holds smoke TOML for tests and local runs. Full-scale run
+configurations are not part of this repository.
 
 Schema: `src/calibread/inference/config.py`.
 
