@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "calibread"
+version = "0.1.0"
+description = "Reliability evaluation and conformal baselines for parametric LLM Read operations"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Research use; choose a release license before publication" }
+authors = [{ name = "CalibRead research team" }]
+dependencies = []
+
+[project.optional-dependencies]
+analysis = [
+  "matplotlib>=3.8",
+  "numpy>=1.26",
+  "pandas>=2.2",
+  "scikit-learn>=1.4",
+  "scipy>=1.12",
+]
+llm = [
+  "datasets>=3.0",
+  "torch>=2.2",
+  "transformers>=4.45",
+]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[project.scripts]
+calibread-authoring = 'calibread.authoring:main'
+calibread-build-candidates = 'calibread.candidates:main'
+calibread-condition-audit = 'calibread.condition_audit:main'
+calibread-data = 'calibread.data_pipeline:main'
+calibread-infer = 'calibread.inference.cli:main'
+calibread-r5-atoms = 'calibread.r5_atoms:main'
+calibread-demo = "calibread.demo:main"
+calibread-evaluate = "calibread.evaluate:main"
+calibread-validate-config = "calibread.config:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

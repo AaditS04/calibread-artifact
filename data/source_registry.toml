@@ -1,0 +1,178 @@
+registry_version = 1
+
+[sources.socrates_v1]
+title = 'SOCRATES v1'
+role = 'R5 multi-hop synthesis and R1 corpus co-occurrence proxy'
+homepage = 'https://github.com/google-deepmind/latent-multi-hop-reasoning'
+license = 'CC-BY-4.0'
+license_url = 'https://github.com/google-deepmind/latent-multi-hop-reasoning/blob/main/LICENSE_DATA'
+license_status = 'approved'
+redistribution = true
+attribution = 'SOCRATES dataset, Google DeepMind; retain CC BY 4.0 attribution.'
+transport = 'github_file'
+repository = 'google-deepmind/latent-multi-hop-reasoning'
+revision = 'b241cf3263756eca87cfc39d679673996e802642'
+path = 'datasets/SOCRATES_v1.csv'
+filename = 'SOCRATES_v1.csv'
+expected_sha256 = '7c24c81bd09e6362e9312dad768c6d54984c37c7c87812b8c1d3d2c65cab19c0'
+max_bytes = 30000000
+adapter = 'socrates_v1'
+
+[sources.popqa]
+title = 'PopQA'
+role = 'R1 popularity proxy and factual single-hop QA'
+homepage = 'https://github.com/AlexTMallen/adaptive-retrieval'
+license = 'MIT'
+license_url = 'https://github.com/AlexTMallen/adaptive-retrieval/blob/main/LICENSE'
+license_status = 'approved'
+redistribution = true
+attribution = 'PopQA from Adaptive Retrieval; retain the upstream MIT notice.'
+transport = 'github_file'
+repository = 'AlexTMallen/adaptive-retrieval'
+revision = '8172ab04794a1651488207c230286b0b3786d736'
+path = 'data/popQA.tsv'
+filename = 'popQA.tsv'
+expected_sha256 = '9a5227f41bff0e4c331d4a774d946b12f95307892b58f860a9606ef356e6089b'
+max_bytes = 15000000
+adapter = 'popqa'
+
+[sources.streamingqa_valid]
+title = 'StreamingQA validation split'
+role = 'R3 temporal and recency evaluation'
+homepage = 'https://github.com/google-deepmind/streamingqa'
+license = 'CC-BY-4.0'
+license_url = 'https://github.com/google-deepmind/streamingqa/blob/master/LICENSE'
+license_status = 'approved'
+redistribution = true
+attribution = 'StreamingQA, Google DeepMind; retain CC BY 4.0 attribution.'
+transport = 'url'
+url = 'https://storage.googleapis.com/dm-streamingqa/streaminqa_valid.jsonl.gz'
+filename = 'streaminqa_valid.jsonl.gz'
+expected_md5 = '3570fbba6e2630e0c2bff03b150f9230'
+max_bytes = 100000000
+adapter = 'streamingqa'
+
+[sources.wikidata_snapshot]
+title = 'Frozen Wikidata subset'
+role = 'R2 precision variants, entity lineage, aliases, and types'
+homepage = 'https://www.wikidata.org/wiki/Wikidata:Data_access'
+license = 'CC0-1.0'
+license_url = 'https://creativecommons.org/publicdomain/zero/1.0/'
+license_status = 'approved'
+redistribution = true
+attribution = 'Wikidata contributors; attribution requested even though the data are CC0.'
+transport = 'manual'
+filename = 'wikidata_subset.jsonl'
+max_bytes = 5000000000
+adapter = 'inventory_only'
+manual_instructions = 'Freeze a dated immutable subset and record its SHA-256. Live SPARQL is development-only.'
+
+[sources.musique]
+title = 'MuSiQue'
+role = 'Primary R5 two-, three-, and four-hop validation with explicit decompositions'
+homepage = 'https://github.com/stonybrooknlp/musique'
+license = 'CC-BY-4.0'
+license_url = 'https://github.com/stonybrooknlp/musique/blob/main/LICENSE'
+license_status = 'approved'
+redistribution = true
+attribution = 'MuSiQue dataset; retain CC BY 4.0 attribution.'
+transport = 'url'
+url = 'https://drive.usercontent.google.com/download?id=1tGdADlNjWFaHLeZZGShh2IRcpO6Lv24h&export=download&confirm=t'
+revision = 'official-google-drive-file-1tGdADlNjWFaHLeZZGShh2IRcpO6Lv24h'
+filename = 'musique_v1.0.zip'
+expected_sha256 = '98f839bf2fd5319f5c688aed77901a6d5c30b3b9f9f691ab9a8ecafb045ee0cd'
+expected_md5 = '2f16c88e333b9a3452f3f81eb09eb0c0'
+max_bytes = 1000000000
+adapter = 'musique_v1'
+
+[sources.malamute]
+title = 'MALAMUTE'
+role = 'R3 temporal QA'
+homepage = 'https://github.com/Shaier/MALAMUTE'
+license = 'MIT'
+license_url = 'https://github.com/Shaier/MALAMUTE/blob/main/LICENSE'
+license_status = 'approved'
+redistribution = true
+attribution = 'MALAMUTE; retain the upstream MIT notice.'
+transport = 'github_file'
+repository = 'Shaier/MALAMUTE'
+revision = 'main'
+path = 'data.zip'
+filename = 'data.zip'
+max_bytes = 2000000000
+adapter = 'inventory_only'
+
+[sources.mmlu_cf]
+title = 'MMLU-CF'
+role = 'R6 specialist-domain validation'
+homepage = 'https://github.com/microsoft/MMLU-CF'
+license = 'CDLA-Permissive-2.0'
+license_url = 'https://cdla.dev/permissive-2-0/'
+license_status = 'approved'
+redistribution = true
+attribution = 'MMLU-CF; preserve license and provenance notices.'
+transport = 'manual'
+filename = 'mmlu_cf_snapshot'
+max_bytes = 2000000000
+adapter = 'inventory_only'
+manual_instructions = 'Pin an exact Hugging Face dataset revision and save the snapshot fingerprint.'
+
+[sources.freshqa]
+title = 'FreshQA'
+role = 'Fresh and dynamic R3 stress test'
+homepage = 'https://github.com/freshllms/freshqa'
+license = 'Apache-2.0 repository; upstream sheet contents require confirmation'
+license_url = 'https://github.com/freshllms/freshqa/blob/main/LICENSE'
+license_status = 'approved'
+redistribution = false
+attribution = 'FreshQA; retain notices and do not redistribute the frozen sheet by default.'
+transport = 'manual'
+filename = 'freshqa_frozen.csv'
+max_bytes = 100000000
+adapter = 'inventory_only'
+manual_instructions = 'Export a dated snapshot, record SHA-256 and access date, and keep raw data private.'
+
+[sources.ambigqa]
+title = 'AmbigQA / AmbigNQ'
+role = 'Candidate R4 ambiguity source'
+homepage = 'https://github.com/shmsw25/AmbigQA'
+license = 'Unresolved'
+license_url = ''
+license_status = 'review_required'
+redistribution = false
+attribution = 'Do not use until explicit dataset-license terms are documented.'
+transport = 'manual'
+filename = 'ambigqa.zip'
+max_bytes = 2000000000
+adapter = 'inventory_only'
+manual_instructions = 'Obtain explicit dataset-license terms before download or use.'
+
+[sources.comparisonqa]
+title = 'ComparisonQA'
+role = 'Candidate comparison and precision source'
+homepage = 'https://github.com/HKUST-KnowComp/ComparisonQA'
+license = 'Unresolved'
+license_url = ''
+license_status = 'review_required'
+redistribution = false
+attribution = 'Do not use until explicit dataset-license terms are documented.'
+transport = 'manual'
+filename = 'comparisonqa.zip'
+max_bytes = 2000000000
+adapter = 'inventory_only'
+manual_instructions = 'Obtain explicit dataset-license terms before download or use.'
+
+[sources.calibread_authored_r4_r6]
+title = 'CalibRead Authored R2/R4/R6 Benchmark'
+role = 'Matched precision, ambiguity, and audited domain-specialization questions'
+homepage = 'local://docs/r4_r6_annotation_protocol.md'
+license = 'Project-owned; CC-BY-4.0 release proposed after contributor consent'
+license_url = 'https://creativecommons.org/licenses/by/4.0/'
+license_status = 'approved'
+redistribution = false
+attribution = 'CalibRead annotation team and cited fact-source owners.'
+transport = 'manual'
+filename = 'annotations.jsonl'
+max_bytes = 500000000
+adapter = 'authored_r4_r6'
+manual_instructions = 'Copy the template, obtain contributor consent, independently annotate, adjudicate, and validate before refinement.'
